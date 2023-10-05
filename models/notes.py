@@ -54,7 +54,7 @@ while True:
             print('Le vas a mandar mensaje a: ' + order['billing']['first_name'] + ' ' + order['billing'][
                 'last_name'] + '. ¿Queres continuar?')
             cont = input('Y/N')
-            if cont == 'Y' or cont == 'Y':
+            if cont == 'Y' or cont == 'y':
                 pass
             else:
                 continue

@@ -1,5 +1,6 @@
 from woocommerce import API
 import pprint
+from wcapi import wcapi_edit
 
 # data1 = {
 #             'status': 'on-hold',
@@ -22,13 +23,7 @@ import pprint
 #                 {'id': 156193, 'key': '_billing_dni_afip', 'value': '44937958'}],
 #         }
 
-wcapi = API(
-    url="https://vagner.ar",
-    consumer_key='ck_3376b8e61f5936d8950a30fb796e8bce99a0be3a',
-    consumer_secret='cs_b03a51cbab961fb98e3bc066b3fd733026380638',
-    wp_api=True,
-    version='wc/v3'
-)
+wcapi = wcapi_edit
 
 while True:
     op = input('''Elija la operación: 

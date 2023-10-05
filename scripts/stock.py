@@ -21,4 +21,4 @@ for product in products:
 
 df = pd.DataFrame(data)
 
-df.to_csv('/home/vagner/Documentos/Woocommerceapi/stock.csv', index=False)
+df.to_csv('./files/stock.csv', index=False)

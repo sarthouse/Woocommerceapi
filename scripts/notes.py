@@ -1,4 +1,3 @@
-from woocommerce import API
 import pprint
 from wcapi import wcapi_edit
 

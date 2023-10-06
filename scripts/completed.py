@@ -5,7 +5,7 @@ from datetime import datetime
 data = []
 page = 1
 while True:
-    ordenes = wcapi.get("orders", params={"status": "completed", "after": "2023-06-21T00:00:00", "page": page}).json()
+    ordenes = wcapi.get("orders", params={"status": "completed", "after": "2023-01-01T00:00:00", "page": page}).json()
     if not ordenes:
         break
     for orden in ordenes:

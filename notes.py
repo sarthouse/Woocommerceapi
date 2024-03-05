@@ -27,23 +27,23 @@ import pandas as pd
 wcapi = wcapi_edit
 
 while True:
-    op = input('''Elija la operación: 
+    op = input('''
+Elija la operación: 
     1 - Listar notas
     2 - Enviar mensaje de seguimiento
     3 - Agregar nota interna
-    4 - Cantidad de pedidos desde el 27/11/2023
-    5 - Pedidos completados desde el 01/01/2023
-    6 - Listado de stock\n''')
+    4 - Cantidad de pedidos con fecha
+    5 - Pedidos completados con fecha
+    6 - Listado de stock
+    0 - Cerrar\n''')
     if op == '1':
         ID = input('Introduce numero de pedido: ')
         order = wcapi.get(f'orders/{ID}').json()
         print(order['billing']['first_name'] + ' ' + order['billing']['last_name'])
         try:
             notes = wcapi.get(f'orders/{ID}/notes').json()
-            notes_data = []
             for note in notes:
-                notes_data.append(note['note'])
-            pprint.pprint(notes_data)
+                print(str(note['note']) + " Fecha:" +str(note['date_created']) + "\n")
         except:
             continue
 
@@ -52,13 +52,18 @@ while True:
             ID = input('Introduce numero de pedido: ')
             order = wcapi.get(f'orders/{ID}').json()
             print('Le vas a mandar mensaje a: ' + order['billing']['first_name'] + ' ' +
-                  order['billing']['last_name'] + '. ¿Querés continuar?')
-            cont = input('Y/N')
-            if cont == 'Y' or cont == 'y' or cont == '':
+                  order['billing']['last_name'] + '.')
+            cont = input('¿Querés continuar? S/n: ')
+            if cont == 'S' or cont == 's' or cont == '':
                 pass
             else:
                 continue
             seguimiento = input('Introduce numero de seguimiento: ')
+            cont = input('¿Enviar? S/n: ')
+            if cont == 'S' or cont == 's' or cont == '':
+                pass
+            else:
+                continue
             nota = (
                 f'Hola {order["billing"]["first_name"]} ¿cómo estás? Mi nombre es Gabriel,'
                 f' voy a estar gestionando tu pedido.'
@@ -83,48 +88,52 @@ while True:
             data = {'note': nota,
                     'added_by_user': True}
             note = wcapi.post(f'orders/{ID}/notes', data).json()
-            note = f'''\nNota: {note['note']},\nEnviado al cliente: {note['customer_note']},\nAutor: {note['author']}'''
+            note = (f"Nota: {note['note']}, Enviado al cliente: {note['customer_note']}, Autor: {note['author']}")
             pprint.pprint(note)
         except:
             break
     elif op == '4':
-	d = int(input('Día: '))
-	m = int(input('Mes: '))
-	a = int(input('Año: '))
+        d = input('Día: ')
+        m = input('Mes: ')
+        a = input('Año: ')
+        fecha = f'{a}-{m}-{d}'
 	
         page = 1
         i = 0
         while True:
-            orders = wcapi.get("orders", params={"after": f"{a}-{m}-{d}T00:00:00", "page": page}).json()
+            orders = wcapi.get("orders", params={"after": f"{fecha}T00:00:00", "page": page}).json()
             if not orders:
                 break
 
             for order in orders:
                 i += 1
-                print(order['id'], order['status'])
-                page += 1
-                print('La cantidad de pedidos:' + str(i))
+                print(str(order['id']) + ', '+ order['status'])
+            page += 1
+        print('La cantidad de pedidos:' + str(i)+'\n')
 
     elif op == '5':
-	d = int(input('Día: '))
-	m = int(input('Mes: '))
-	a = int(input('Año: '))
+        d = input('Día: ')
+        m = input('Mes: ')
+        a = input('Año: ')
+        fecha = f'{a}-{m}-{d}'
+
         data = []
         page = 1
         while True:
             ordenes = wcapi.get("orders",
-                                params={"status": "completed", f"after": "{a}-{m}-{d}T00:00:00", "page": page}).json()
+                                params={"status": "completed", "after": f"{fecha}T00:00:00", "page": page}).json()
             if not ordenes:
                 break
-            for orden in ordenes:
+            for order in ordenes:
 
-                for item in orden["line_items"]:
+                for product in order["line_items"]:
                     data.append({
-                        'ID de Orden': orden['id'],
-                        'Fecha de Creación': datetime.strptime(orden['date_created'], '%Y-%m-%dT%H:%M:%S').strftime(
+                        'ID de Orden': order['id'],
+                        'Fecha de Creación': datetime.datetime.strptime(order['date_created'], '%Y-%m-%dT%H:%M:%S').strftime(
                             '%d/%m/%Y %H:%M'),
-                        'Productos': item['name'],
-                        'Cantidad': item['quantity']
+                        'SKU': product['sku'],
+                        'Productos': product['name'],
+                        'Cantidad': product['quantity']
                     })
             page += 1
 

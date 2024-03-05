@@ -16,8 +16,8 @@ while True:
                 "Cantidad": item["quantity"],
                 "SKU": item['sku']
             })
-        productos_agrupados = "\n ".join(
-            f'- {producto["Producto"]} ({producto["Cantidad"]}) SKU:{producto["SKU"]}' for producto in
+        productos_agrupados = ", ".join(
+            f'{producto["Producto"]} ({producto["Cantidad"]}) SKU:{producto["SKU"]}' for producto in
             detalles_productos)
 
         data.append({
@@ -52,7 +52,7 @@ Pedido {i['ID de Orden']}
 {i['Teléfono']}
 {i['Email']}
 {i['Tipo de envío']}
-Pedidos
+--- PEDIDO ---
 {i['Productos']}
 '''
         f.write(p)

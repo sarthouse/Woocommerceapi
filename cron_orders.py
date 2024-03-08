@@ -21,7 +21,7 @@ while True:
             detalles_productos)
 
         data.append({
-            'ID de Orden': order['id'],
+            'Orden': order['id'],
             'Fecha de Creación': order['date_created'],
             'Nombre completo': order["billing"]["first_name"] + " " + order["billing"]["last_name"],
             'Provincia': order['billing']['state'],
@@ -42,17 +42,17 @@ with open('/home/vagner/Escritorio/pedidos.txt', 'w') as f:
     f.write(f'Ultima actualización: {date}\n')
     for i in data:
         p = f'''
-Pedido {i['ID de Orden']}
+Pedido {i['Orden']}
 {i['Fecha de Creación']}
 {i['Nombre completo']}
-{i['Provincia']}
-{i['Ciudad']}
-{i['Dirección']}
-{i['Código Postal']}
-{i['Teléfono']}
-{i['Email']}
+{i['Dirección']}, CP:{i['Código Postal']}, {i['Provincia']}, {i['Ciudad']}
+{i['Teléfono']}, {i['Email']}
 {i['Tipo de envío']}
 --- PEDIDO ---
 {i['Productos']}
+Notas: 
+
+
+
 '''
         f.write(p)

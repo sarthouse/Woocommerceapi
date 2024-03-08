@@ -173,6 +173,8 @@ Elija la operación:
         df = pd.DataFrame(data)
         df.to_csv('/home/vagner/Escritorio/stock.csv', index=False)
         print('Listo!')
+    
+        
 
     elif op == '0':
         break

@@ -19,7 +19,7 @@ while True:
         productos_agrupados = ", ".join(
             f'{producto["Producto"]} ({producto["Cantidad"]}) SKU:{producto["SKU"]}' for producto in
             detalles_productos)
-
+        
         data.append({
             'Orden': order['id'],
             'Fecha de Creación': order['date_created'],
@@ -31,7 +31,10 @@ while True:
             'Teléfono': order["billing"]["phone"],
             "Email": order["billing"]["email"],
             'Tipo de envío': order['shipping_lines'][0]['method_title'],
-            'Productos': productos_agrupados})
+            'Productos': productos_agrupados,
+            'Envío':'',
+            'Nombre y DNI':'',
+            'Firma':''})
     page += 1
 
 df = pd.DataFrame(data)

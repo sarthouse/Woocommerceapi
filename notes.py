@@ -3,27 +3,6 @@ from wcapi import wcapi_edit
 import datetime
 import pandas as pd
 
-# data1 = {
-#             'status': 'on-hold',
-#             'billing': {
-#                 'first_name': 'Gabriel',
-#                 'last_name': 'Sarthou',
-#                 'address_1': 'Gregorio de Laferrere 2728',
-#                 'city': 'CABA',
-#                 'phone': '1130754739',
-#                 'postcode': '1439'},
-#             'shipping': {
-#                 'first_name': 'Gabriel',
-#                 'last_name': 'Sarthou',
-#                 'address_1': 'Gregorio de Laferrere 2728',
-#                 'city': 'CABA',
-#                 'phone': '',
-#                 'postcode': '1439'},
-#             'meta_data': [
-#                 {'id': 156195, 'key': 'DNI', 'value': '44937958'},
-#                 {'id': 156193, 'key': '_billing_dni_afip', 'value': '44937958'}],
-#         }
-
 wcapi = wcapi_edit
 
 while True:
@@ -35,6 +14,7 @@ Elija la operación:
     4 - Cantidad de pedidos con fecha
     5 - Pedidos completados con fecha
     6 - Listado de stock
+    7 - Ver/Actualizar stock por SKU
     0 - Cerrar\n''')
     if op == '1':
         ID = input('Introduce numero de pedido: ')
@@ -53,13 +33,13 @@ Elija la operación:
             order = wcapi.get(f'orders/{ID}').json()
             print('Le vas a mandar mensaje a: ' + order['billing']['first_name'] + ' ' +
                   order['billing']['last_name'] + '.')
-            cont = input('¿Querés continuar? S/n: ')
+            cont = input('¿Querés continuar? (S)/n: ')
             if cont == 'S' or cont == 's' or cont == '':
                 pass
             else:
                 continue
             seguimiento = input('Introduce numero de seguimiento: ')
-            cont = input('¿Enviar? S/n: ')
+            cont = input('¿Enviar? (S)/n: ')
             if cont == 'S' or cont == 's' or cont == '':
                 pass
             else:
@@ -93,9 +73,9 @@ Elija la operación:
         except:
             break
     elif op == '4':
-        d = input('Día: ')
-        m = input('Mes: ')
-        a = input('Año: ')
+        d = str(int(input('Día: ')))
+        m = str(int(input('Mes: ')))
+        a = str(int(input('Año: ')))
         fecha = f'{a}-{m}-{d}'
 	
         page = 1
@@ -112,9 +92,9 @@ Elija la operación:
         print('La cantidad de pedidos:' + str(i)+'\n')
 
     elif op == '5':
-        d = input('Día: ')
-        m = input('Mes: ')
-        a = input('Año: ')
+        d = str(int(input('Día: ')))
+        m = str(int(input('Mes: ')))
+        a = str(int(input('Año: ')))
         fecha = f'{a}-{m}-{d}'
 
         data = []
@@ -173,9 +153,34 @@ Elija la operación:
         df = pd.DataFrame(data)
         df.to_csv('/home/vagner/Escritorio/stock.csv', index=False)
         print('Listo!')
-    
-        
+    elif op == '7':
+        sku = input('Ingresa SKU producto: ')
+        p = wcapi.get('products', params={'sku': sku}).json()[0]
+        pid=p['parent_id']
+        id= p['id']
+        v = wcapi.get(f'products/{pid}/variations/{id}').json()
+        print(str(p['name']) + " " + str(v['name']) +" " + str(p['sku']) + " " + str(p['stock_quantity']))
+        print("ID: " + str(id))
+        print("Parent ID: " + str(pid))
 
+        if int(pid) == 0:
+            continue
+        else:
+            cont = input('¿Modificar? s/(N): ')
+            if cont == 'S' or cont == 's':
+                stock = int(input('Ingrese cantidad: '))
+                cont =input('¿Enviar? (S)/n: ')
+                if cont == 'S' or cont == 's' or cont == '':
+                    data = {
+                        'stock_quantity':stock
+                        }
+                    v = wcapi_edit.put(f'products/{pid}/variations/{id}', data).json()
+                    p = wcapi.get(f'products/{id}').json()
+                    print(str(p['name']) + " " + str(v['name']) + " " + str(v['sku']) + " " + str(v['stock_quantity']))
+                else:
+                    continue
+            else:
+                continue
     elif op == '0':
         break
 

@@ -47,7 +47,7 @@ Elija la operación:
             nota = (
                 f'Hola {order["billing"]["first_name"]} ¿cómo estás? Mi nombre es Gabriel,'
                 f' voy a estar gestionando tu pedido.'
-                f' Me podes hacer cualquier consulta. Tu pedido va a ser despachado en el día de hoy.'
+                f' Me podes hacer cualquier consulta. Tu pedido va a ser despachado en el día de mañana.'
                 f' Te dejo el número de envío de Correo Argentino: {seguimiento},'
                 f' lo podés seguir a través de este link: https://www.correoargentino.com.ar/formularios/e-commerce.'
                 f' Muchas gracias por la compra')

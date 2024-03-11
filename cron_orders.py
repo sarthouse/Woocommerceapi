@@ -24,8 +24,7 @@ while True:
             'Orden': order['id'],
             'Fecha de Creación': order['date_created'],
             'Nombre completo': order["billing"]["first_name"] + " " + order["billing"]["last_name"],
-            'Provincia': order['billing']['state'],
-            'Ciudad': order["billing"]["city"],
+            'Localidad': order["billing"]["city"]+ ", " + order['billing']['state'],
             'Dirección': order["billing"]["address_1"] + ' ' + order["billing"]["address_2"],
             'Código Postal': order["billing"]["postcode"],
             'Teléfono': order["billing"]["phone"],
@@ -48,13 +47,15 @@ with open('/home/vagner/Escritorio/pedidos.txt', 'w') as f:
 Pedido {i['Orden']}
 {i['Fecha de Creación']}
 {i['Nombre completo']}
-{i['Dirección']}, CP:{i['Código Postal']}, {i['Provincia']}, {i['Ciudad']}
+{i['Dirección']}, CP:{i['Código Postal']}, {i['Localidad']}
 {i['Teléfono']}, {i['Email']}
 {i['Tipo de envío']}
 --- PEDIDO ---
 {i['Productos']}
 Notas: 
 
+
+Aclaración y firma:
 
 
 '''

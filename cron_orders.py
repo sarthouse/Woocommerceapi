@@ -16,46 +16,39 @@ while True:
                 "Cantidad": item["quantity"],
                 "SKU": item['sku']
             })
-        productos_agrupados = ", ".join(
+        productos_agrupados = "\n".join(
             f'{producto["Producto"]} ({producto["Cantidad"]}) SKU:{producto["SKU"]}' for producto in
             detalles_productos)
         
         data.append({
             'Orden': order['id'],
-            'Fecha de Creación': order['date_created'],
+            'Fecha': order['date_created'],
             'Nombre completo': order["billing"]["first_name"] + " " + order["billing"]["last_name"],
-            'Localidad': order["billing"]["city"]+ ", " + order['billing']['state'],
+            'Localidad': order["billing"]["city"],
+            'Provincia': order['billing']['state'],
             'Dirección': order["billing"]["address_1"] + ' ' + order["billing"]["address_2"],
-            'Código Postal': order["billing"]["postcode"],
+            'CP': order["billing"]["postcode"],
             'Teléfono': order["billing"]["phone"],
             "Email": order["billing"]["email"],
             'Tipo de envío': order['shipping_lines'][0]['method_title'],
-            'Productos': productos_agrupados,
-            'Envío':'',
-            'Nombre y DNI':'',
-            'Firma':''})
+            'Productos': productos_agrupados})
     page += 1
 
 df = pd.DataFrame(data)
-df.to_csv('~/Escritorio/pedidos.csv', index=False)
-
 with open('/home/vagner/Escritorio/pedidos.txt', 'w') as f:
+    
     date = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
     f.write(f'Ultima actualización: {date}\n')
-    for i in data:
+    for i in data:            
         p = f'''
 Pedido {i['Orden']}
-{i['Fecha de Creación']}
+{i['Fecha']}
 {i['Nombre completo']}
-{i['Dirección']}, CP:{i['Código Postal']}, {i['Localidad']}
+{i['Dirección']}, CP:{i['CP']}, {i['Localidad']}, {i['Provincia']}
 {i['Teléfono']}, {i['Email']}
 {i['Tipo de envío']}
 --- PEDIDO ---
-{i['Productos']}
-Notas: 
-
-
-Aclaración y firma:
+{i['Salto']}
 
 
 '''
